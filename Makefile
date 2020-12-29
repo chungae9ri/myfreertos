@@ -11,7 +11,7 @@ export TOPOUT := $(TOPDIR)/out
 
 #MAKEFILES = $(shell find . -maxdepth 2 -type f -name Makefile)
 #SUBDIRS   = $(filter-out ./,$(dir $(MAKEFILES)))
-SUBDIRS := core ARM_CA9 port
+SUBDIRS := core ARM_CA9 port xilinx_bsp xilinx_bsp/scugic_v4_1/src xilinx_bsp/scutimer_v2_1/src xilinx_bsp/uartps_v3_8/src
 MODULES := $(addprefix $(TOPDIR)/, $(SUBDIRS))
 #MODULES := $(TOPDIR)/core $(TOPDIR)/port $(TOPDIR)/ARM_CA9
 OUTCSRCS := $(foreach sdir, $(MODULES), $(wildcard $(sdir)/*.c))
@@ -25,8 +25,7 @@ all:
 		mkdir -p $(TOPOUT)/$$dir;\
 		$(MAKE) -C $$dir $$dir; \
 	done
-	@echo $(MODULES)
-	$(LD) -T myfreertos.lds -o $(TOPOUT)/a.elf $(OUTCOBJS) $(OUTASMOBJS) -L$(LIB) -L$(LIB2) -lc -lgcc
+	$(LD) -T myfreertos.ld -o $(TOPOUT)/a.elf $(OUTCOBJS) $(OUTASMOBJS) -L$(LIB) -L$(LIB2) -lc -lgcc
 
 clean :
 	@echo clean
