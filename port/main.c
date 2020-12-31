@@ -51,14 +51,3 @@ void vAssertCalled( const char * pcFile, unsigned long ulLine )
 	}
 	taskEXIT_CRITICAL();
 }
-
-/* dummy funcs for fixing compile error from linking libc */
-void _init()
-{
-
-}
-
-void _fini()
-{
-
-}

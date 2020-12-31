@@ -11,7 +11,7 @@ export TOPOUT := $(TOPDIR)/out
 
 #MAKEFILES = $(shell find . -maxdepth 2 -type f -name Makefile)
 #SUBDIRS   = $(filter-out ./,$(dir $(MAKEFILES)))
-SUBDIRS := core ARM_CA9 port xilinx_bsp xilinx_bsp/scugic_v4_1/src xilinx_bsp/scutimer_v2_1/src xilinx_bsp/uartps_v3_8/src
+SUBDIRS := core ARM_CA9 port xilinx_bsp
 MODULES := $(addprefix $(TOPDIR)/, $(SUBDIRS))
 #MODULES := $(TOPDIR)/core $(TOPDIR)/port $(TOPDIR)/ARM_CA9
 OUTCSRCS := $(foreach sdir, $(MODULES), $(wildcard $(sdir)/*.c))

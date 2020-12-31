@@ -60,7 +60,9 @@
 /***************************** Include Files ********************************/
 
 #include "xil_types.h"
-#include "xpseudo_asm.h"
+/* kyi imsi S */
+/*#include "xpseudo_asm.h"*/
+/* kyi imsi E */
 #include "bspconfig.h"
 
 #ifdef __cplusplus

@@ -58,8 +58,12 @@
 #include "xil_types.h"
 #include "xil_assert.h"
 #include "xil_exception.h"
+/* kyi imsi S */
+#if 0
 #include "xpseudo_asm.h"
 #include "xdebug.h"
+#endif
+/* kyi imsi E */
 /************************** Constant Definitions ****************************/
 
 /**************************** Type Definitions ******************************/
@@ -257,7 +261,7 @@ void Xil_ExceptionRemoveHandler(u32 Exception_id)
 
 void Xil_SyncAbortHandler(void *CallBackRef){
 	(void) CallBackRef;
-	xdbg_printf(XDBG_DEBUG_ERROR, "Synchronous abort \n");
+	/*xdbg_printf(XDBG_DEBUG_ERROR, "Synchronous abort \n");*/
 	while(1) {
 		;
 	}
@@ -278,7 +282,7 @@ void Xil_SyncAbortHandler(void *CallBackRef){
 ****************************************************************************/
 void Xil_SErrorAbortHandler(void *CallBackRef){
 	(void) CallBackRef;
-	xdbg_printf(XDBG_DEBUG_ERROR, "Synchronous abort \n");
+	/*xdbg_printf(XDBG_DEBUG_ERROR, "Synchronous abort \n");*/
 	while(1) {
 		;
 	}
@@ -369,7 +373,7 @@ void Xil_PrefetchAbortHandler(void *CallBackRef){
 ****************************************************************************/
 void Xil_UndefinedExceptionHandler(void *CallBackRef){
 	(void) CallBackRef;
-	xdbg_printf(XDBG_DEBUG_GENERAL, "Address of the undefined instruction %lx\n",UndefinedExceptionAddr);
+	/*xdbg_printf(XDBG_DEBUG_GENERAL, "Address of the undefined instruction %lx\n",UndefinedExceptionAddr);*/
 	while(1) {
 		;
 	}
