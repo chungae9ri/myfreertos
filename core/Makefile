@@ -10,4 +10,4 @@ $(TOPOUT)/core/%.o: %.c
 $(TOPOUT)/core/%.o: %.S
 	$(CC) $(INC) -o $@ -c $< -Wall -mcpu=cortex-a9 -mfpu=vfpv3 -Wall -fno-omit-frame-pointer
 
-core: $(COBJ) $(ASMOBJ)
+core/: $(COBJ) $(ASMOBJ)

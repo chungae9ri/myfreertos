@@ -10,4 +10,4 @@ $(TOPOUT)/ARM_CA9/%.o: %.c
 $(TOPOUT)/ARM_CA9/%.o: %.S
 	$(CC) $(INC) -o $@ -c $< -Wall -g -mcpu=cortex-a9 -mfpu=vfpv3 -Wall -fno-omit-frame-pointer
 
-ARM_CA9: $(COBJ) $(ASMOBJ)
+ARM_CA9/: $(COBJ) $(ASMOBJ)

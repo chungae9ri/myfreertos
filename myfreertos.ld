@@ -70,5 +70,4 @@ SECTIONS
 		. = ALIGN(16);
 		__undef_stack = .;
 	} > ps7_ddr_0
-
 }
