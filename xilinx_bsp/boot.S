@@ -124,6 +124,7 @@
 .set EFUSEStaus,        (0xF800D000 + 0x10)            /*(XPS_EFUSE_BASEADDR + EFUSE_STATUS_OFFSET)*/
 
 /* workaround for simulation not working when L1 D and I caches,MMU and  L2 cache enabled - DT568997 */
+.set SIM_MODE, 1
 .if SIM_MODE == 1
 .set CRValMmuCac,	0b00000000000000	/* Disable IDC, and MMU */
 .else
