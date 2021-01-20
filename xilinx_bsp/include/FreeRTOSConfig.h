@@ -182,11 +182,12 @@ nothing to return to.  To avoid this define configTASK_RETURN_ADDRESS to 0.  */
  * that is suitable for use on the Zynq MPU.  FreeRTOS_Tick_Handler() must
  * be installed as the peripheral's interrupt handler.
  */
-void vConfigureTickInterrupt( void );
-#define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
 
-void vClearTickInterrupt( void );
-#define configCLEAR_TICK_INTERRUPT() vClearTickInterrupt()
+void FreeRTOS_SetupTickInterrupt( void );
+#define configSETUP_TICK_INTERRUPT() FreeRTOS_SetupTickInterrupt()
+
+void FreeRTOS_ClearTickInterrupt( void );
+#define configCLEAR_TICK_INTERRUPT()	FreeRTOS_ClearTickInterrupt()
 
 /* The following constant describe the hardware, and are correct for the
 Zynq MPU. */

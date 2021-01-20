@@ -5,10 +5,48 @@
 #include "semphr.h"
 #include "xil_printf.h"
 
+#define STACK_SIZE 1024
+#define TASK_PRIORITY (configMAX_PRIORITIES - 1)
+
+void vPlatformInit()
+{
+	xil_printf("vPlatformInit\n");
+	/* called from vTaskStartScheduler -> xPortStartScheduler->configSETUP_TICK_INTERRUPT*/
+	/*FreeRTOS_SetupTickInterrupt();*/
+}
+
+
+void vTaskOutStream(void *pvParams)
+{
+	const TickType_t xDelay = pdMS_TO_TICKS(200);
+
+	for (;;) {
+		xil_printf("%s\n", __func__);
+		/*vPrintString("%s\n", __func__);*/
+		vTaskDelay(xDelay);
+	}
+}
+
 int main( void )
 {
-	xil_printf("Hello World\n");
-	while (1);
+	TaskHandle_t xHandle;
+
+	vPlatformInit();
+
+	if (xTaskCreate(vTaskOutStream,
+			"OutStreamTask",
+			STACK_SIZE,
+			NULL,
+			TASK_PRIORITY,
+			&xHandle
+		   ) != pdPASS) 
+	{
+		xil_printf("Start OutStreamTask fail\n");
+	}
+
+	vTaskStartScheduler();
+	
+	xil_printf("vTaskStartScheduler fail\n");
 	return 0;
 }
 
