@@ -4,67 +4,63 @@
 #include "task.h"
 #include "semphr.h"
 #include "xil_printf.h"
-#include <odev.h>
 
 #define STACK_SIZE 1024
 #define TASK_PRIORITY (configMAX_PRIORITIES - 1)
+#define XUART_PS_MR_OfFSET		(4U)
+typedef struct uart_ps {
+	volatile uint32_t CR;
+	volatile uint32_t MR;
+	volatile uint32_t IER;
+	volatile uint32_t IDR;
+	volatile const uint32_t IMR;
+	volatile uint32_t ISR;
+	volatile uint32_t BAUDGEN;
+	volatile uint32_t RXTOUT;
+	volatile uint32_t RXWM;
+	volatile uint32_t MODEMCR;
+	volatile uint32_t MODEMSR;
+	volatile const uint32_t SR;
+	volatile uint32_t FIFO;
+	volatile uint32_t BAUD_DIV;
+	volatile uint32_t FLOW_DELAY;
+	volatile uint32_t TX_FIFO_TRIG_LV;
+} UART_PS_t;
 
-void vPlatformInit()
+void init_uart(void)
 {
-	xil_printf("vPlatformInit\n");
-	/* called from vTaskStartScheduler -> xPortStartScheduler->configSETUP_TICK_INTERRUPT*/
-	/*FreeRTOS_SetupTickInterrupt();*/
+	UART_PS_t *puart = (UART_PS_t *)(STDIN_BASEADDRESS);
+	puart->CR = 0x00000114;
+	puart->MR = 0x00000020;
+	puart->IER = 0x00000000;
+	puart->IDR = 0x00000000;
+	puart->BAUDGEN = 0x0000007C;
+	puart->RXTOUT = 0x0000000A;
+	puart->RXWM = 0x00000038;
+	puart->MODEMCR = 0x00000003;
+	puart->BAUD_DIV = 0x00000006;
+	puart->FLOW_DELAY = 0x00000000;
+	puart->TX_FIFO_TRIG_LV = 0x00000020;
 }
 
-#define O_STREAM_START		0x38000000
-#define O_STREAM_END		0x3C000000
-#define O_STREAM_BURST_SZ	0x00000040 /* 64B */
-#define O_STREAM_STEP		0x00000100 /* 256B */
-#define O_STREAM_WRAP		0x00001000 /* 4096 */
+void vPlatformInit(void)
+{
+	init_uart();
+	xil_printf("vPlatformInit\n");
+}
+
 
 void vTaskOutStream(void *pvParams)
 {
-	volatile uint8_t *psrc;
-	uint32_t i, j, consumer_started;
-	const TickType_t xDelay = pdMS_TO_TICKS(20);
+	const TickType_t xDelay = pdMS_TO_TICKS(200);
 
-	xil_printf("%s\n", __func__);
-	psrc = (volatile uint8_t *)O_STREAM_START;
-
-	// To avoid underflow, prepare initial data first
-	for (i = 0; i < O_STREAM_WRAP * 4; i++) {
-		/* seq number starting from 1*/
-		((uint32_t *)((uint32_t)psrc + O_STREAM_BURST_SZ * i))[0] = i + 1;
-	}
-	// 
-	xil_printf("start odev \n");
-	start_odev();
-	set_consume_latency(1000);
-
-	start_odev_stream();
-
-	i = j = consumer_started = 0;
-	/* out stream forever */
 	for (;;) {
-		/*((uint32_t *)((uint32_t)psrc + O_STREAM_STEP * i))[0] = k++;*/
-		if (!put_to_itab(O_STREAM_START + O_STREAM_STEP * i, O_STREAM_STEP)) {
-			/*xil_printf("put_to_itab: %d\n", i);*/
-			vTaskDelay(xDelay);
-			i++;
-			i = i % O_STREAM_WRAP;
-		} else {
-			/* blocked for a while */
-			vTaskDelay(xDelay);
-		}
-		if (i == 256 && consumer_started == 0) {
-			start_consumer();
-			consumer_started = 1;
-		}
-		xil_printf("i: %d\n", i);
+		xil_printf("%s\n", __func__);
+		vTaskDelay(xDelay);
 	}
 }
 
-int main( void )
+void main(void)
 {
 	TaskHandle_t xHandle;
 
@@ -76,15 +72,14 @@ int main( void )
 			NULL,
 			TASK_PRIORITY,
 			&xHandle
-		   ) != pdPASS) 
-	{
+		   ) != pdPASS) {
 		xil_printf("Start OutStreamTask fail\n");
 	}
 
+	xil_printf("vTaskStartScheduler success\n");
 	vTaskStartScheduler();
 	
-	xil_printf("vTaskStartScheduler fail\n");
-	return 0;
+	while(1);
 }
 
 void vAssertCalled( const char * pcFile, unsigned long ulLine )
@@ -95,13 +90,10 @@ void vAssertCalled( const char * pcFile, unsigned long ulLine )
 	( void ) ulLine;
 
 	taskENTER_CRITICAL();
-	{
-		/* Set ul to a non-zero value using the debugger to step out of this
-		   function. */
-		while( ul == 0 )
-		{
-			portNOP();
-		}
+	/* Set ul to a non-zero value using the debugger to step out of this
+	   function. */
+	while( ul == 0 ) {
+		portNOP();
 	}
 	taskEXIT_CRITICAL();
 }
