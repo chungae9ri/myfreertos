@@ -1,8 +1,9 @@
+CURPATH :=app
 CSRC := $(wildcard *.c)
-COBJ := $(patsubst %.c,$(TOPOUT)/app/%.o,$(wildcard *.c))
-INC := -I$(TOPDIR)/ARM_CA9 -I$(TOPDIR)/core/include -I$(TOPDIR)/xilinx_bsp/include
+COBJ := $(patsubst %.c,$(TOPOUT)/$(CURPATH)/%.o,$(wildcard *.c))
+INC := -I../xilinx_bsp/include -I../FreeRTOS-Kernel/include -I../FreeRTOS-Kernel/portable/GCC/ARM_CA9
 
-$(TOPOUT)/app/%.o: %.c
+$(TOPOUT)/$(CURPATH)/%.o: %.c
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $< -Wall -mcpu=cortex-a9 -mfpu=vfpv3 -Wall -fno-omit-frame-pointer -g
 
-app/: $(COBJ)
+app: $(COBJ)

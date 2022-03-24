@@ -60,7 +60,7 @@ void vTaskOutStream(void *pvParams)
 	}
 }
 
-void main(void)
+int main(void)
 {
 	TaskHandle_t xHandle;
 
@@ -80,6 +80,8 @@ void main(void)
 	vTaskStartScheduler();
 	
 	while(1);
+
+	return 0;
 }
 
 void vAssertCalled( const char * pcFile, unsigned long ulLine )
